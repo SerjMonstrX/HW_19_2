@@ -1,0 +1,26 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Мужская одежда",
+      "description": "Одежда для взрослых мужчин"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Женская одежда",
+      "description": "Одежда для взрослых женщин"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+      "name": "Детская одежда",
+      "description": "Одежда для детей"
+    }
+  }
+]
