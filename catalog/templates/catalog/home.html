@@ -1,26 +1,15 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-
 <div class="container">
     <div class="row text-center">
-        <div class="col-3">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Удобный сервис рассылок</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">$ 140</h1>
-                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- Неограниченная лицензия</li>
-                        <li>- Поддержка</li>
-                        <li>- Установка на сервер</li>
-                        <li>- Получение обновлений</li>
-                    </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
-                </div>
-            </div>
+        <div class="col-12">
+            <h2 class="display-4">Добро пожаловать в Cosmus shop!</h2>
+            <p class="lead">Мы предлагаем стильную и качественную одежду для всех возрастов и вкусов.</p>
+            <p>У нас вы найдете широкий ассортимент товаров, от повседневной одежды до особых коллекций.</p>
+            <p>Выбирайте Cosmus shop - выбирайте качество и стиль!</p>
+            <a href="{% url 'catalog:products' %}" class="btn btn-primary btn-lg mt-3">Перейти в каталог</a>
         </div>
     </div>
-
+</div>
 {% endblock %}
