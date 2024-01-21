@@ -12,8 +12,5 @@ class HomeView(TemplateView):
     template_name = 'catalog/home.html'
 
 
-def contacts(request):
-    context = {
-        'title': 'Контакты'
-    }
-    return render(request, 'catalog/contacts.html', context)
+class ContactView(TemplateView):
+    template_name = 'catalog/contacts.html'
