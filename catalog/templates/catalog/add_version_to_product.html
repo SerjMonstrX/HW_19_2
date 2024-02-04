@@ -1,0 +1,13 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <div class="container">
+  <h2>{{ product.name }} - Добавить версию</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать версию</button>
+  </form>
+  <a href="{% url 'catalog:product_detail' product.pk %}">Назад к продукту</a>
+    </div>
+{% endblock %}

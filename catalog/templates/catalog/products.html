@@ -1,7 +1,7 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-<div class="col-12 mb-5">
+<div class="container mb-5">
     <a class="btn btn-outline-primary" href="{% url 'catalog:create_product' %}">Добавить продукт</a>
 </div>
 <div class="container">
@@ -16,10 +16,13 @@
                     <h1 class="card-title pricing-card-title">{{ object.price }} <small class="text-muted"> руб. </small></h1>
                     <ul class="list-unstyled mt-3 mb-4">
                         <li>{{ object.description|truncatechars:100 }}</li>
+                        {% if object.active_versions %}
+                            <li>Активная версия: {{ object.active_versions.0.version_name }}</li>
+                        {% endif %}
                     </ul>
                     <div class="d-flex justify-content-between">
-                        <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-sm btn-outline-primary">Купить</a>
-                        <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                        <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                        <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-sm btn-outline-secondary">Изменить</a>
                         <a href="{% url 'catalog:delete_product' object.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
                     </div>
                 </div>
