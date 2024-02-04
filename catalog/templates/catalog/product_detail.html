@@ -1,0 +1,17 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+  <h2>{{ product.name }}</h2>
+  <p>{{ product.description }}</p>
+
+  <h3>Версии продукта:</h3>
+  <ul>
+    {% for version in versions %}
+      <li>{{ version.version_name }} ({{ version.version_number }}) {% if version.is_active %}(Активная версия){% endif %}</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'catalog:update_product' object.pk %}" class="btn btn-primary">Редактировать</a>
+  <a href="{% url 'catalog:delete_product' object.pk%}" class="btn btn-danger">Удалить</a>
+  <a href="{% url 'catalog:products' %}" class="btn btn-secondary">К списку продуктов</a>
+{% endblock %}
