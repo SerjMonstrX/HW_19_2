@@ -1,0 +1,24 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                     Добавление Продукта
+                </h3>
+
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                      <a href="{% url 'catalog:product_detail' product.pk %}">Назад к продукту</a>
+                </form>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+{% endblock %}

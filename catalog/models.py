@@ -1,6 +1,22 @@
 from django.db import models
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 NULLABLE = {'blank': True, 'null': True}
+
+
+class Version(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='versions', verbose_name='продукт')
+    version_number = models.PositiveIntegerField(verbose_name='номер версии', validators=[MinValueValidator(1)])
+    version_name = models.CharField(max_length=100, verbose_name='название версии')
+    is_current_version = models.BooleanField(default=True, verbose_name='признак текущей версии')
+
+    def __str__(self):
+        return f'{self.product.name} - Версия {self.version_number}'
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+        unique_together = ('product', 'version_number')  # Уникальность номера версии для каждого продукта
+        ordering = ['product', '-version_number']  # Сортировка по убыванию номеров версий
 
 
 class Category(models.Model):
@@ -27,6 +43,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_active_version(self):
+        return self.versions.filter(is_current_version=True).first()
 
     class Meta:
         verbose_name = 'продукт'

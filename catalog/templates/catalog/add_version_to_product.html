@@ -1,0 +1,20 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>{{ product.name }} - Добавить версию</h2>
+
+        {% if active_version %}
+            <div class="alert alert-info">
+                Активная версия: {{ active_version.version_name }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Создать версию</button>
+            <a href="{% url 'catalog:product_detail' product.pk %}">Назад к продукту</a>
+        </form>
+    </div>
+{% endblock %}
