@@ -14,7 +14,8 @@
                     {% csrf_token %}
                     {{ form.as_p }}
 
-                    <button type="submit" class="tn btn-success">Сохранить</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                      <a href="{% url 'catalog:product_detail' product.pk %}">Назад к продукту</a>
                 </form>
             </div>
             <div class="card-footer"></div>

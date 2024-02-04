@@ -10,7 +10,6 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['name', 'description', 'price', 'category']
 
-
     def clean_name(self):
         forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция',
                            'радар']
@@ -29,6 +28,12 @@ class ProductForm(forms.ModelForm):
                 raise ValidationError(f"Недопустимое слово в описании продукта: {word}")
         return description
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
 class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
@@ -36,6 +41,6 @@ class VersionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.add_input(Submit('submit', 'Создать версию'))
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
