@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'catalog',
     'blog',
     'crispy_forms',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,4 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
+AUTH_USER_MODEL = 'users.User'
