@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
 from django.views.generic import CreateView
 from users.forms import UserRegisterForm
 from users.models import User
@@ -29,7 +30,7 @@ class RegisterView(CreateView):
 
       # Создаем токен для подтверждения почты
       token = default_token_generator.make_token(user)
-      uidb64 = urlsafe_base64_encode(user.pk.to_bytes(4, 'big'))  # преобразуем PK пользователя в bytes
+      uidb64 = urlsafe_base64_encode(force_bytes(user.pk))  # преобразуем PK пользователя в bytes
 
       # Создаем ссылку для верификации почты
       verify_url = self.request.build_absolute_uri(
