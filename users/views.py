@@ -24,7 +24,7 @@ class RegisterView(CreateView):
 
    def form_valid(self, form):
       user = form.save(commit=False)
-      user.is_active = False
+      user.is_verified = False
       user.save()
 
       # Создаем токен для подтверждения почты
@@ -64,7 +64,7 @@ class VerifyEmailView(View):
 
       if user is not None and default_token_generator.check_token(user, token):
          # Если пользователь существует и токен верен, активируем аккаунт пользователя
-         user.is_active = True
+         user.is_verified = True
          user.save()
          messages.success(request, 'Ваш аккаунт успешно активирован. Вы можете войти.')
          login(request, user)
