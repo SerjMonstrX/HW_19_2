@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,3 +139,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
 AUTH_USER_MODEL = 'users.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+# EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'Cosmusbz@mail.ru'
+EMAIL_HOST_PASSWORD = '6wxshcBRb9d2Pr3hWvS3'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
