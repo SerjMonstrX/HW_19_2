@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
 from django.views.generic import CreateView
 from users.forms import UserRegisterForm
 from users.models import User
@@ -24,12 +25,12 @@ class RegisterView(CreateView):
 
    def form_valid(self, form):
       user = form.save(commit=False)
-      user.is_active = False
+      user.is_verified = False
       user.save()
 
       # Создаем токен для подтверждения почты
       token = default_token_generator.make_token(user)
-      uidb64 = urlsafe_base64_encode(user.pk.to_bytes(4, 'big'))  # преобразуем PK пользователя в bytes
+      uidb64 = urlsafe_base64_encode(force_bytes(user.pk))  # преобразуем PK пользователя в bytes
 
       # Создаем ссылку для верификации почты
       verify_url = self.request.build_absolute_uri(
@@ -64,7 +65,7 @@ class VerifyEmailView(View):
 
       if user is not None and default_token_generator.check_token(user, token):
          # Если пользователь существует и токен верен, активируем аккаунт пользователя
-         user.is_active = True
+         user.is_verified = True
          user.save()
          messages.success(request, 'Ваш аккаунт успешно активирован. Вы можете войти.')
          login(request, user)
