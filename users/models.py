@@ -10,6 +10,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=50, verbose_name='телефон', **NULLABLE)
     country = models.CharField(max_length=100, verbose_name='страна', **NULLABLE)
     is_verified = models.BooleanField(default=False, verbose_name='подтвержден ли аккаунт')
+    verification_token = models.CharField(max_length=100, verbose_name='Токен верификации', blank=True, null=True)
 
     class Meta:
         verbose_name = 'пользователь'
