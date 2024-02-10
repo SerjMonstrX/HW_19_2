@@ -60,36 +60,36 @@ class VerifyEmailView(View):
 
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'  # ваш шаблон для входа
-    success_url = 'catalog/home.html'  # URL, на который нужно перенаправить пользователя после успешной аутентификации
+    success_url = '/'  # URL, на который нужно перенаправить пользователя после успешной аутентификации
     form_class = UserLoginForm
-#
-# class PasswordResetView(FormView):
-#     form_class = PasswordResetForm
-#     template_name = 'users/password_reset_form.html'
-#     email_template_name = 'users/password_reset_email.html'
-#     success_url = reverse_lazy('users:password_reset_done')
-#
-#     def form_valid(self, form):
-#         email = form.cleaned_data['email']
-#         try:
-#             user = User.objects.get(email=email)
-#             # Генерируем новый случайный пароль
-#             new_password = User.objects.make_random_password()
-#             # Устанавливаем новый пароль для пользователя
-#             user.set_password(new_password)
-#             user.save()
-#
-#             # Отправляем письмо с новым паролем
-#             subject = 'Сброс пароля'
-#             message = render_to_string(self.email_template_name, {'new_password': new_password})
-#             send_mail(subject, message, None, [user.email], html_message=None)
-#
-#             messages.success(self.request, 'Новый пароль отправлен на ваш email.')
-#         except User.DoesNotExist:
-#             messages.error(self.request, 'Пользователь с указанным email не найден.')
-#
-#         return super().form_valid(form)
-#
-#
-# class PasswordResetDoneView(BasePasswordResetDoneView):
-#     template_name = 'users/password_reset_done.html'
+
+class PasswordResetView(FormView):
+    form_class = PasswordResetForm
+    template_name = 'users/password_reset_form.html'
+    email_template_name = 'users/password_reset_email.html'
+    success_url = reverse_lazy('users:password_reset_done')
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        try:
+            user = User.objects.get(email=email)
+            # Генерируем новый случайный пароль
+            new_password = User.objects.make_random_password()
+            # Устанавливаем новый пароль для пользователя
+            user.set_password(new_password)
+            user.save()
+
+            # Отправляем письмо с новым паролем
+            subject = 'Сброс пароля'
+            message = render_to_string(self.email_template_name, {'new_password': new_password})
+            send_mail(subject, message, None, [user.email], html_message=None)
+
+            messages.success(self.request, 'Новый пароль отправлен на ваш email.')
+        except User.DoesNotExist:
+            messages.error(self.request, 'Пользователь с указанным email не найден.')
+
+        return super().form_valid(form)
+
+
+class PasswordResetDoneView(BasePasswordResetDoneView):
+    template_name = 'users/password_reset_done.html'
