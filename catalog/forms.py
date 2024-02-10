@@ -16,7 +16,7 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)  # Извлекаем атрибут request
         super().__init__(*args, **kwargs)
-        self.fields['user'].widget = forms.HiddenInput()  # Скрываем поле user, пока добавил отображение, т.к. не работает авто привязка
+        self.fields['user'].widget = forms.HiddenInput()  # Скрываем поле user
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
