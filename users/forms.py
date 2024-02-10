@@ -4,7 +4,6 @@ from django import forms
 
 
 class UserRegisterForm(UserCreationForm):
-
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2')
@@ -15,9 +14,7 @@ class UserRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control'
 
 
-
 class UserLoginForm(AuthenticationForm):
-
     class Meta:
         model = User
         fields = ('email', 'password')

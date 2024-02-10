@@ -4,6 +4,8 @@ from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Version
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 
 class ProductListView(ListView):
@@ -17,6 +19,7 @@ class ProductListView(ListView):
         queryset = Product.objects.prefetch_related(prefetch_versions).all()
         return queryset
 
+
 class HomeView(TemplateView):
     template_name = 'catalog/home.html'
 
@@ -25,10 +28,15 @@ class ContactView(TemplateView):
     template_name = 'catalog/contacts.html'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user #Не работает, хотя вроде должно, пока временно поставил выбор пользователя
+        form.instance.save()  # Сохраняем экземпляр модели перед вызовом super().form_valid()
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -52,6 +60,8 @@ class ProductDetailView(DetailView):
         context['active_version'] = active_version
         return context
 
+
+@login_required
 def add_version_to_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
 
