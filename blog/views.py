@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
 from .models import BlogPost
+from django.shortcuts import redirect
 
 
 class BlogCreateView(CreateView):
@@ -11,8 +12,12 @@ class BlogCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.view_count = 0  # Устанавливаем начальное количество просмотров
-        return super().form_valid(form)
 
+        # Получаем изображение из формы и сохраняем его в поле модели
+        if 'preview' in self.request.FILES:
+            form.instance.preview = self.request.FILES['preview']
+
+        return super().form_valid(form)
     def get_success_url(self):
         return reverse('blog:detail', kwargs={'slug': self.object.slug})
 
