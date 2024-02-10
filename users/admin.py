@@ -1,3 +1,9 @@
 from django.contrib import admin
+from users.models import User
 
-# Register your models here.
+
+@admin.register(User)
+class Userdmin(admin.ModelAdmin):
+    list_display = ('email', 'is_verified', )
+    list_filter = ('is_verified',)
+    search_fields = ('email', 'is_verified', )

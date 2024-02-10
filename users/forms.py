@@ -1,6 +1,6 @@
-
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User
+from django import forms
 
 
 class UserRegisterForm(UserCreationForm):
@@ -26,3 +26,13 @@ class UserLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+
+class PasswordResetRequestForm(forms.Form):
+    email = forms.EmailField(label='Email')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Пожалуйста, введите ваш адрес электронной почты.')
+        return email
