@@ -38,7 +38,6 @@ class User(AbstractUser):
     verification_token = models.CharField(max_length=100, verbose_name='Токен верификации', blank=True, null=True)
     objects = UserManager()
 
-
     class Meta:
         verbose_name = 'пользователь'
         verbose_name_plural = 'пользователи'

@@ -1,11 +1,6 @@
-from django import forms
-from django.core.exceptions import ValidationError
 from catalog.models import Product, Version
-
-
 from django import forms
 from django.core.exceptions import ValidationError
-from catalog.models import Product
 
 
 class ProductForm(forms.ModelForm):
