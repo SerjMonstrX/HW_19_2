@@ -4,8 +4,8 @@ from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Version
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 class ProductListView(ListView):
@@ -34,20 +34,37 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('catalog:products')
 
     def form_valid(self, form):
-        form.instance.user = self.request.user #Не работает, хотя вроде должно, пока временно поставил выбор пользователя
-        form.instance.save()  # Сохраняем экземпляр модели перед вызовом super().form_valid()
+        # Получаем текущего пользователя
+        user = self.request.user
+        # Присваиваем текущего пользователя полю user нового продукта
+        form.instance.user = user
+        # Сохраняем экземпляр модели перед вызовом super().form_valid()
         return super().form_valid(form)
 
+    def get_form_kwargs(self):
+        # Получаем ключевые аргументы для формы
+        kwargs = super().get_form_kwargs()
+        # Изменяем аргументы формы, добавляя пользователя в их начальные значения
+        kwargs['initial'] = {'user': self.request.user}
+        return kwargs
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products')
 
+    def test_func(self):
+        product = self.get_object()
+        return self.request.user == product.user
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:products')
+
+    def test_func(self):
+        product = self.get_object()
+        return self.request.user == product.user
 
 
 class ProductDetailView(DetailView):
@@ -62,6 +79,7 @@ class ProductDetailView(DetailView):
 
 
 @login_required
+@user_passes_test(lambda u: lambda product_id: u == get_object_or_404(Product, pk=product_id).user, login_url='/login/')
 def add_version_to_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
 
