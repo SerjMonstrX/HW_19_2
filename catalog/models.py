@@ -1,5 +1,8 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
+from django.contrib.auth import get_user_model
+
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -40,6 +43,8 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name='цена за штуку')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
     last_change_date = models.DateTimeField(auto_now=True, verbose_name='дата последнего изменения')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, default=None, null=True,
+                             verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name}'

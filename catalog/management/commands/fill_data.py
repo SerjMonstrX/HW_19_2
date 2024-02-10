@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand
+from users.models import User
 from catalog.models import Category, Product
 
 
@@ -8,6 +9,9 @@ class Command(BaseCommand):
         # Очистка данных
         Category.objects.all().delete()
         Product.objects.all().delete()
+
+        # Создание пользователя
+        user = User.objects.create_user(email='test2@ytest.ru', password='testtest1')
 
         # Список категорий
         category_list = [
@@ -27,19 +31,19 @@ class Command(BaseCommand):
 
             # Добавление продуктов для каждой категории
             if category.name == "Мужская одежда":
-                product_for_create.append(Product(name="Черные джинсы", price=2000, category=category,
+                product_for_create.append(Product(name="Черные джинсы", price=2000, category=category, user=user,
                                                   description="Стильные и удобные черные джинсы подчеркнут вашу индивидуальность. Высокое качество материала обеспечит комфорт на каждом шагу."))
-                product_for_create.append(Product(name="Кожаная куртка", price=5000, category=category,
+                product_for_create.append(Product(name="Кожаная куртка", price=5000, category=category, user=user,
                                                   description="Элегантная кожаная куртка - идеальное сочетание стиля и тепла. Отличный выбор для тех, кто ценит комфорт и модный вид."))
             elif category.name == "Женская одежда":
-                product_for_create.append(Product(name="Платье в цветочек", price=4000, category=category,
+                product_for_create.append(Product(name="Платье в цветочек", price=4000, category=category, user=user,
                                                   description="Легкое и воздушное платье в цветочек придаст вам нежность и женственность. Идеально подходит для летнего настроения и особенных событий."))
-                product_for_create.append(Product(name="Туфли на каблуке", price=8000, category=category,
+                product_for_create.append(Product(name="Туфли на каблуке", price=8000, category=category, user=user,
                                                   description="Элегантные туфли на каблуке придают вашему образу изысканности. Идеальный выбор для особых моментов и повседневной элегантности."))
             elif category.name == "Детская одежда":
-                product_for_create.append(Product(name="Детский костюм", price=3000, category=category,
+                product_for_create.append(Product(name="Детский костюм", price=3000, category=category, user=user,
                                                   description="Стильный детский костюм обеспечит вашего малыша комфортом и модным видом. Подходит для любого случая."))
-                product_for_create.append(Product(name="Мягкий детский плед", price=2000, category=category,
+                product_for_create.append(Product(name="Мягкий детский плед", price=2000, category=category, user=user,
                                                   description="Нежный и мягкий детский плед создан для тепла и уюта. Прекрасный выбор для детской комнаты или в дороге."))
 
         # bulk_create для категорий и продуктов
