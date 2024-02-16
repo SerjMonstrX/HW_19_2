@@ -49,7 +49,7 @@ class VerifyEmailView(View):
             raise Http404("Пользователь не найден")
 
         if user.verification_token == token:
-            user.is_verified = True
+            user.is_active = True
             user.save()
             messages.success(request, 'Ваш аккаунт успешно активирован. Вы можете войти.')
             return redirect('users:login')
