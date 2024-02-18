@@ -1,6 +1,7 @@
+from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.db.models import Prefetch
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ModeratorProductForm
 from catalog.models import Product, Version
 from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView, DetailView
 from django.shortcuts import get_object_or_404, render, redirect
@@ -51,12 +52,18 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
 class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
-    form_class = ProductForm
     success_url = reverse_lazy('catalog:products')
+
+    def get_form_class(self):
+        if self.request.user.is_staff and not self.request.user == self.get_object().user:
+            return ModeratorProductForm
+        else:
+            return ProductForm
+
 
     def test_func(self):
         product = self.get_object()
-        return self.request.user == product.user
+        return self.request.user == product.user or self.request.user.is_staff  # Модератор или автор поста
 
 
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -80,9 +87,12 @@ class ProductDetailView(DetailView):
 
 
 @login_required
-@user_passes_test(lambda u: lambda product_id: u == get_object_or_404(Product, pk=product_id).user, login_url='/login/')
 def add_version_to_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
+
+    # Проверяем, является ли текущий пользователь модератором или автором продукта
+    if not (request.user.is_authenticated and (request.user == product.user or request.user.is_staff)):
+        return HttpResponseForbidden("У вас нет доступа к этому действию.")
 
     if request.method == 'POST':
         form = VersionForm(request.POST)
