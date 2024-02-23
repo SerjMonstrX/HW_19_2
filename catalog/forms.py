@@ -10,11 +10,17 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)  # Извлекаем атрибут request
+        self.categories = kwargs.pop('categories', None)  # Извлекаем атрибут categories
         super().__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()  # Скрываем поле user
+
+        # Устанавливаем выпадающий список для поля category
+        if self.categories:
+            self.fields['category'].widget = forms.Select(
+                choices=[(category.pk, str(category)) for category in self.categories])
+
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-
     def save(self, commit=True):
         instance = super().save(commit=False)
         if self.request:
@@ -59,5 +65,12 @@ class ModeratorProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.categories = kwargs.pop('categories', None)  # Извлекаем атрибут categories
+
+        # Устанавливаем выпадающий список для поля category
+        if self.categories:
+            self.fields['category'].widget = forms.Select(
+                choices=[(category.pk, str(category)) for category in self.categories])
+
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
