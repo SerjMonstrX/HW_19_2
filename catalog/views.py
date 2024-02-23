@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+from catalog.services import get_categories
+
 
 class ProductListView(ListView):
     model = Product
@@ -20,6 +22,10 @@ class ProductListView(ListView):
         queryset = Product.objects.prefetch_related(prefetch_versions).all()
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = get_categories()
+        return context
 
 class HomeView(TemplateView):
     template_name = 'catalog/home.html'
@@ -47,6 +53,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         # Изменяем аргументы формы, добавляя пользователя в их начальные значения
         kwargs['initial'] = {'user': self.request.user}
+        kwargs['categories'] = get_categories()  # Добавляем категории в аргументы формы
         return kwargs
 
 
@@ -64,6 +71,11 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         product = self.get_object()
         return self.request.user == product.user or self.request.user.is_staff  # Модератор или автор поста
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['categories'] = get_categories()  # Добавляем категории в аргументы формы
+        return kwargs
 
 
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
